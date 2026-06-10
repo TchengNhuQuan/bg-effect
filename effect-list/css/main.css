@@ -1,0 +1,586 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  box-sizing: border-box;
+}
+
+/* ─── CSS Variables (theme color + font) ─── */
+:root {
+  --accent: #79b533;
+  --font-family-sans: 'Segoe UI', Arial, sans-serif;
+  --font-family-serif: 'Georgia', 'Times New Roman', serif;
+  --font-family-mono: 'Courier New', Courier, monospace;
+}
+
+/* ─── Layout ─── */
+.layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Sidebar ─── */
+.sidebar {
+  width: 20%;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 2rem;
+  transition:
+    background 0.4s,
+    color 0.4s;
+}
+
+/* ─── Main area ─── */
+.main-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ─── Background layer ─── */
+.background {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition:
+    background-image 0.5s ease,
+    filter 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dark overlay when dark theme */
+.background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  transition: background 0.4s;
+  pointer-events: none;
+}
+.main-content {
+  z-index: 9998;
+}
+/* ─── Background presets ─── */
+.bg-1 {
+  background-image: url('../../images/digital-art-fire.jpg');
+}
+.bg-2 {
+  background-image: url('../../images/world.png');
+}
+.bg-3 {
+  background-image: url('../../images/beautiful-snow-covered-mountains-landscape-kashmir-state-india.jpg');
+}
+.bg-4 {
+  background-image: url('../../images/pexels-vooto-27437016.jpg');
+}
+.bg-5 {
+  background-image: url('../../images/pexels-felix-mittermeier-957962.jpg');
+}
+.bg-6 {
+  background-image: url('../../images/pexels-simon73-3462588.jpg');
+}
+
+h1 {
+  font-size: 40px;
+  line-height: 1.5;
+  text-align: center;
+  z-index: 1;
+  position: relative;
+  transition:
+    color 0.3s,
+    font-family 0.3s;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+h1.theme-light,
+h1.theme-dark,
+span.theme-light,
+span.theme-dark {
+  color: #ffffff;
+}
+
+/* ─── Accent-colored elements ─── */
+.accent-btn {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    transform 0.15s;
+}
+.accent-btn:hover {
+  transform: scale(1.08);
+}
+
+/* ─── Modal trigger button ─── */
+.modal-custom-effect {
+  position: absolute;
+  right: 20px;
+  top: 40px;
+  z-index: 9999;
+}
+
+/* ─── Modal overlay ─── */
+.modal-content-effect {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+}
+
+/* ─── Settings card ─── */
+.settings-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+  width: 100%;
+  max-width: 560px;
+  padding: 2rem 2rem 2.5rem;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+
+.settings-card.theme-dark {
+  background: #1e2030;
+  color: #e0e0e0;
+}
+.settings-card.theme-dark .settings-title {
+  color: #f0f0f0;
+}
+.settings-card.theme-dark .section-label {
+  color: #ddd;
+}
+.settings-card.theme-dark .section-desc {
+  color: #888;
+}
+.settings-card.theme-dark .settings-divider {
+  border-top-color: #333;
+}
+.settings-card.theme-dark .theme-card {
+  border-color: #444;
+  background: #252840;
+}
+.settings-card.theme-dark .theme-card-label {
+  color: #ccc;
+}
+.settings-card.theme-dark .font-btn {
+  background: #2a2d44;
+  border-color: #444;
+  color: #aaa;
+}
+.settings-card.theme-dark .font-btn.active {
+  background: #1a3a6e;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.settings-card.theme-dark .setting-select {
+  background-color: #252840;
+  border-color: #444;
+  color: #ccc;
+}
+.settings-card.theme-dark .custom-hex {
+  background: #252840;
+  border-color: #444;
+  color: #ccc;
+}
+
+.settings-title {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 1.2rem;
+  transition: color 0.3s;
+}
+
+.btnCloseModal {
+  padding: 0 4px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+.btnCloseModal:hover {
+  background-color: #eee;
+}
+.settings-card.theme-dark .btnCloseModal:hover {
+  background-color: #333;
+}
+
+/* ─── Tabs ─── */
+.settings-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1.5px solid #e8e8e8;
+  margin-bottom: 1.8rem;
+  transition: border-color 0.3s;
+}
+.settings-card.theme-dark .settings-tabs {
+  border-bottom-color: #333;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #888;
+  padding: 0 1rem 0.65rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1.5px;
+  transition:
+    color 0.18s,
+    border-color 0.18s;
+}
+.tab-btn:first-child {
+  padding-left: 0;
+}
+.tab-btn.active {
+  color: #111;
+  font-weight: 600;
+  border-bottom-color: var(--accent);
+}
+.tab-btn:hover:not(.active) {
+  color: #333;
+}
+.settings-card.theme-dark .tab-btn.active {
+  color: #f0f0f0;
+  border-bottom-color: var(--accent);
+}
+
+/* ─── Section labels ─── */
+.section-label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 0.25rem;
+  transition: color 0.3s;
+}
+.section-desc {
+  font-size: 0.8rem;
+  color: #999;
+  margin-bottom: 0.9rem;
+  transition: color 0.3s;
+}
+.settings-divider {
+  border: none;
+  border-top: 1px solid #f0f0f0;
+  margin: 1.5rem 0;
+  transition: border-color 0.3s;
+}
+
+/* ─── Color swatches ─── */
+.color-swatches {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition:
+    transform 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s;
+  flex-shrink: 0;
+}
+.swatch:hover {
+  transform: scale(1.12);
+}
+.swatch.active {
+  border-color: #111;
+  transform: scale(1.15);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.8),
+    0 0 0 4px #111;
+}
+.settings-card.theme-dark .swatch.active {
+  border-color: #fff;
+  box-shadow:
+    0 0 0 2px rgba(30, 32, 48, 0.8),
+    0 0 0 4px #fff;
+}
+
+.swatch-black {
+  background: #111111;
+}
+.swatch-navy {
+  background: #2244cc;
+}
+.swatch-blue {
+  background: #3b82f6;
+}
+.swatch-sky {
+  background: #38bdf8;
+}
+.swatch-purple {
+  background: #7c3aed;
+}
+.swatch-pink {
+  background: #db2777;
+}
+.swatch-rose {
+  background: #e11d48;
+}
+.swatch-orange {
+  background: #ea580c;
+}
+.swatch-yellow {
+  background: #eab308;
+}
+.swatch-green {
+  background: #79b533;
+}
+
+.custom-label {
+  font-size: 0.78rem;
+  color: #888;
+  margin-left: 4px;
+}
+.custom-color-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 2px;
+}
+.custom-hex {
+  font-size: 0.78rem;
+  color: #555;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  padding: 4px 10px;
+  width: 88px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.custom-hex:focus {
+  border-color: var(--accent);
+}
+
+/* ─── Theme cards ─── */
+.theme-cards {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.theme-card {
+  flex: 1;
+  min-width: 130px;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #e8e8e8;
+  transition:
+    border-color 0.18s,
+    transform 0.15s;
+  position: relative;
+}
+.theme-card:hover {
+  border-color: #aaa;
+  transform: translateY(-2px);
+}
+.theme-card.active {
+  border-color: var(--accent);
+}
+
+.theme-card-preview {
+  height: 80px;
+  padding: 8px;
+  display: flex;
+  gap: 6px;
+}
+.preview-light {
+  background: #f7f8fa;
+}
+.preview-dark {
+  background: #1a1d2e;
+}
+.preview-system {
+  background: linear-gradient(135deg, #f7f8fa 50%, #1a1d2e 50%);
+}
+
+.preview-sidebar {
+  width: 28px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+.preview-sidebar.dark-s {
+  background: rgba(255, 255, 255, 0.08);
+}
+.preview-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.preview-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.07);
+}
+.preview-bar.dark-b {
+  background: rgba(255, 255, 255, 0.07);
+}
+.preview-bar.accent {
+  width: 40%;
+  background: var(--accent);
+}
+.preview-bar.sm {
+  width: 60%;
+}
+
+.check-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.check-badge svg {
+  width: 11px;
+  height: 11px;
+}
+.theme-card.active .check-badge {
+  display: flex;
+}
+.theme-card-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #333;
+  padding: 6px 10px 8px;
+  transition: color 0.3s;
+}
+
+/* ─── Setting rows ─── */
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.setting-row-info .section-label {
+  margin-bottom: 0.1rem;
+}
+.setting-row-info .section-desc {
+  margin-bottom: 0;
+}
+
+/* ─── Font buttons ─── */
+.font-btns {
+  display: flex;
+  gap: 6px;
+}
+.font-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 8px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: #555;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    transform 0.1s;
+}
+.font-btn:hover {
+  border-color: #aaa;
+  transform: scale(1.05);
+}
+.font-btn[data-font='serif'] {
+  font-family: Georgia, serif;
+}
+.font-btn[data-font='mono'] {
+  font-family: 'Courier New', monospace;
+}
+.font-btn.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, white);
+  color: var(--accent);
+}
+
+/* ─── Select ─── */
+.setting-select {
+  font-family: inherit;
+  font-size: 0.82rem;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  padding: 6px 30px 6px 12px;
+  background-color: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+  min-width: 150px;
+}
+.setting-select:focus {
+  border-color: var(--accent);
+}
+
+/* ─── Background transition ─── */
+.background {
+  transition: background-image 0.6s ease;
+}
+
+@media (max-width: 480px) {
+  .settings-card {
+    padding: 1.4rem 1.2rem 2rem;
+  }
+  .theme-cards {
+    gap: 8px;
+  }
+  .theme-card {
+    min-width: 100px;
+  }
+  .theme-card-preview {
+    height: 66px;
+  }
+  .color-swatches {
+    gap: 6px;
+  }
+  .swatch {
+    width: 24px;
+    height: 24px;
+  }
+  .custom-hex {
+    width: 76px;
+  }
+}
+#effectContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}

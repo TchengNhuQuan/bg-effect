@@ -1,0 +1,407 @@
+/* =================================================================
+   CSS VARIABLES
+   ================================================================= */
+
+:root {
+  /* Layout Dimensions */
+  --viewport-height: 100vh;
+  --viewport-width: 100%;
+  --container-height: 100vh;
+  --container-width: 100%;
+
+  /* Background Colors */
+  --bg-gradient-top: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+  --bg-gradient-bottom: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+
+  /* Fire Gradients */
+  --fire-gradient: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 0, 1) 0%,
+    rgba(255, 150, 0, 0.9) 20%,
+    rgba(255, 80, 0, 0.7) 40%,
+    rgba(200, 50, 0, 0.3) 60%,
+    transparent 80%
+  );
+  --fire-particle-gradient: radial-gradient(rgb(255, 0, 0) 20%, rgba(255, 80, 0, 0) 70%);
+
+  /* Ash Gradient */
+  --ash-gradient: radial-gradient(circle, rgba(200, 150, 100, 0.9) 0%, rgba(150, 100, 50, 0.6) 40%, transparent 70%);
+
+  /* Smoke Gradient */
+  --smoke-gradient: radial-gradient(
+    circle,
+    rgba(80, 60, 40, 0.7) 0%,
+    rgba(60, 45, 30, 0.5) 30%,
+    rgba(40, 30, 20, 0.3) 60%,
+    transparent 80%
+  );
+
+  /* Line Gradient */
+  --line-gradient: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 75%, #ffffff 100%);
+
+  /* Sizes */
+  --image-position-bottom: 50px;
+  --image-position-right: 50px;
+  --image-margin: 20px;
+  --image-border-radius: 10px;
+
+  --line-width: 1px;
+  --line-height: 137%;
+  --line-top: -16%;
+  --line-left: 42%;
+  --line-after-height: 15vh;
+
+  --fire-size: 10em;
+  --fire-height: 12em;
+  --fire-font-size: 24px;
+  --particle-size: 5em;
+
+  --smoke-bottom: 150px;
+
+  /* Z-index Layers */
+  --z-background: -1;
+  --z-image: 1;
+  --z-particles: 1;
+  --z-smoke: 15;
+  --z-fire: 100;
+
+  /* Animation Durations */
+  --fire-flicker-duration: 0.3s;
+  --fade-duration: 2s;
+  --scale-duration: 2s;
+  --ash-sway-duration: 3s;
+  --ash-fade-duration: 2s;
+  --rise-duration: 1s;
+  --drop-duration: 4s;
+  --drop-delay: 0s;
+
+  /* Blur Effects */
+  --fire-blur: 1px;
+  --fire2-blur: 0.02em;
+  --ash-blur: 0.5px;
+  --smoke-blur: 15px;
+}
+
+/* =================================================================
+   BASE STYLES
+   ================================================================= */
+
+body {
+  margin: 0;
+  padding: 0;
+  height: var(--viewport-height);
+  overflow: hidden;
+  position: relative;
+}
+
+/* =================================================================
+   CONTAINER COMPONENTS
+   ================================================================= */
+
+.container {
+  position: relative;
+  width: var(--container-width);
+  height: var(--container-height);
+  overflow: hidden;
+}
+
+.background {
+  position: absolute;
+  z-index: var(--z-background);
+  width: var(--container-width);
+  height: var(--container-height);
+  object-fit: cover;
+}
+.background::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 1) 100%);
+}
+.image-container {
+  position: absolute;
+  bottom: var(--image-position-bottom);
+  right: var(--image-position-right);
+  display: inline-block;
+  margin: var(--image-margin);
+  border-radius: var(--image-border-radius);
+  overflow: hidden;
+}
+
+.background-2 {
+  position: absolute;
+  display: block;
+  max-width: 100%;
+  height: auto;
+  bottom: 0;
+  right: 0;
+}
+
+/* =================================================================
+   PARTICLE SYSTEM - Base Containers
+   ================================================================= */
+
+.falling-particles-container,
+.falling-fires-container,
+.smoke-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--viewport-width);
+  height: var(--viewport-height);
+  pointer-events: none;
+}
+
+.falling-particles-container,
+.falling-fires-container {
+  z-index: var(--z-particles);
+}
+
+.smoke-container {
+  z-index: var(--z-smoke);
+  bottom: 0;
+}
+
+/* =================================================================
+   GROUND FIRE EFFECTS
+   ================================================================= */
+
+.hero {
+  position: absolute;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  bottom: 0;
+  right: 0;
+}
+
+.soldier {
+  position: relative;
+  z-index: 2;
+  height: 76%;
+}
+
+.ground-fire {
+  background-image: url(/images/noise.jpg), url(/images/noise.jpg), linear-gradient(#fff, #999);
+  background-blend-mode: difference, difference, normal;
+  filter: sepia(1) contrast(6) brightness(1.2);
+  animation: sliding 5s linear infinite;
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  transform: translate(-50%, 45%);
+  width: 100%;
+  height: 60%;
+  mix-blend-mode: screen;
+  z-index: 3;
+  mask-image: linear-gradient(to top, black 0%, black 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, black 0%, black 50%, transparent 100%);
+}
+
+.ground-fire::after {
+  content: '';
+  position: absolute;
+  bottom: 30%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent 70%);
+  filter: blur(30px);
+  opacity: 0.6;
+}
+
+/* =================================================================
+   ASH EFFECTS
+   ================================================================= */
+
+.ash-falling {
+  position: absolute;
+  transform: translateY(-10vh);
+  animation: move-ash linear infinite;
+}
+
+.ash-falling .ash-particle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  filter: blur(var(--ash-blur));
+  background: var(--ash-gradient);
+  animation:
+    ash-sway var(--ash-sway-duration) ease-in-out infinite,
+    ash-fade var(--ash-fade-duration) infinite;
+}
+
+/* =================================================================
+   SMOKE EFFECTS
+   ================================================================= */
+
+.smoke-large {
+  position: absolute;
+  bottom: var(--smoke-bottom);
+  border-radius: 50%;
+  opacity: 0;
+  filter: blur(var(--smoke-blur));
+  background: var(--smoke-gradient);
+  animation: smoke-billow ease-out infinite;
+}
+
+/* =================================================================
+   ANIMATIONS - Movement
+   ================================================================= */
+
+@keyframes move-fire {
+  from {
+    transform: translate3d(var(--start-x), -20vh, 0);
+  }
+  to {
+    transform: translate3d(var(--end-x), 120vh, 0);
+  }
+}
+
+@keyframes move-ash {
+  from {
+    transform: translate3d(var(--start-x), -10vh, 0);
+  }
+  to {
+    transform: translate3d(var(--end-x), 120vh, 0);
+  }
+}
+
+
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0) scale(1);
+  }
+  25% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10em) scale(0);
+  }
+}
+
+/* =================================================================
+   ANIMATIONS - Opacity & Fade
+   ================================================================= */
+
+@keyframes fade-frames {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes ash-fade {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes flicker-fall {
+  0% {
+    filter: blur(var(--fire-blur)) brightness(1);
+  }
+  100% {
+    filter: blur(2px) brightness(1.2);
+  }
+}
+
+/* =================================================================
+   ANIMATIONS - Transform & Scale
+   ================================================================= */
+
+@keyframes scale-frames {
+  0%,
+  100% {
+    transform: scale3d(0.4, 0.4, 1);
+  }
+  50% {
+    transform: scale3d(1.5, 1.5, 1);
+  }
+}
+
+@keyframes ash-sway {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-20px);
+  }
+  75% {
+    transform: translateX(20px);
+  }
+}
+
+@keyframes smoke-billow {
+  0% {
+    bottom: var(--smoke-bottom);
+    transform: translateX(-50%) scale(0.3) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    bottom: var(--viewport-height);
+    transform: translateX(-50%) scale(3.5) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+@keyframes sliding {
+  from {
+    background-position:
+      1500px 9000px,
+      0 7000px,
+      0 0;
+  }
+  to {
+    background-position:
+      500px 0,
+      1000px 0,
+      0 0;
+  }
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}

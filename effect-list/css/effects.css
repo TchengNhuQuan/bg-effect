@@ -1,0 +1,557 @@
+canvas {
+  position: absolute;
+}
+
+.ash-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.ashFlake {
+  position: absolute;
+  background: radial-gradient(circle, rgba(200, 150, 100, 0.9) 0%, rgba(150, 100, 50, 0.6) 40%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+@keyframes fall {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+    transform: translateY(100vh);
+  }
+}
+.snow-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.snowflake {
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+@keyframes fall {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes diagonal-fall {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.25;
+    transform: translate(10vw, 100vh);
+  }
+}
+
+/* SMOKE EFFECT */
+:root {
+  --smoke-gradient: radial-gradient(
+    circle,
+    rgba(80, 60, 40, 0.7) 0%,
+    rgba(60, 45, 30, 0.5) 30%,
+    rgba(40, 30, 20, 0.3) 60%,
+    transparent 80%
+  );
+  --smoke-bottom: 150px;
+  --z-smoke: 15;
+  --smoke-blur: 15px;
+}
+
+.smoke-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--viewport-width);
+  height: var(--viewport-height);
+  pointer-events: none;
+}
+.smoke-container {
+  z-index: var(--z-smoke);
+  bottom: 0;
+}
+
+.smoke-large {
+  position: absolute;
+  bottom: var(--smoke-bottom);
+  border-radius: 50%;
+  opacity: 0;
+  filter: blur(var(--smoke-blur));
+  background: var(--smoke-gradient);
+  animation: smoke-billow ease-out infinite;
+}
+
+@keyframes smoke-billow {
+  0% {
+    bottom: var(--smoke-bottom);
+    transform: translateX(-50%) scale(0.3) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    bottom: var(--viewport-height);
+    transform: translateX(-50%) scale(3.5) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+       LEAVES CONTAINER
+    ════════════════════════════════════════════════════════════ */
+
+#leaves {
+  position: relative;
+  top: -50px;
+  width: 100%;
+  text-align: right;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* ════════════════════════════════════════════════════════════
+       LEAF BASE STYLES
+    ════════════════════════════════════════════════════════════ */
+
+#leaves i {
+  display: inline-block;
+  width: 200px;
+  height: 150px;
+  background: linear-gradient(to bottom right, #309900, #005600);
+  transform: skew(20deg);
+  border-radius: 5% 40% 70%;
+  box-shadow: inset 0px 0px 1px #222;
+  border: 1px solid #333;
+  z-index: 1;
+  position: absolute;
+  top: -150px;
+  animation: falling 5s infinite;
+  animation-timing-function: ease-in-out;
+}
+
+/* Leaf stem (bottom right detail) */
+#leaves i:before {
+  position: absolute;
+  content: '';
+  top: 117px;
+  right: 9px;
+  height: 27px;
+  width: 32px;
+  transform: rotate(49deg);
+  border-radius: 0% 15% 15% 0%;
+  border-top: 1px solid #222;
+  border-bottom: 1px solid #222;
+  border-left: 0px solid #222;
+  border-right: 1px solid #222;
+  background: linear-gradient(to right, rgba(0, 100, 0, 1), #005600);
+  z-index: 1;
+}
+
+/* Leaf vein (center line) */
+#leaves i:after {
+  content: '';
+  height: 125px;
+  width: 10px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+  display: block;
+  transform: rotate(125deg);
+  position: absolute;
+  left: 85px;
+  border-radius: 50%;
+}
+
+/* ════════════════════════════════════════════════════════════
+       LEAF SIZE VARIATIONS
+    ════════════════════════════════════════════════════════════ */
+
+/* Small leaves */
+#leaves i:nth-of-type(3n + 1) {
+  height: 11px;
+  width: 16px;
+}
+#leaves i:nth-of-type(3n + 1):before {
+  width: 4px;
+  height: 3px;
+  top: 7px;
+  right: 0px;
+}
+#leaves i:nth-of-type(3n + 1):after {
+  width: 2px;
+  height: 6px;
+  left: 5px;
+  top: 1px;
+}
+
+/* Medium leaves */
+#leaves i:nth-of-type(3n + 2) {
+  height: 17px;
+  width: 23px;
+}
+#leaves i:nth-of-type(3n + 2):before {
+  height: 4px;
+  width: 4px;
+  top: 12px;
+  right: 1px;
+}
+#leaves i:nth-of-type(3n + 2):after {
+  height: 10px;
+  width: 2px;
+  top: 1px;
+  left: 8px;
+}
+
+/* Large leaves */
+#leaves i:nth-of-type(3n) {
+  height: 23px;
+  width: 30px;
+}
+#leaves i:nth-of-type(3n):before {
+  width: 7px;
+  height: 5px;
+  top: 17px;
+  right: 1px;
+}
+#leaves i:nth-of-type(3n):after {
+  width: 2px;
+  height: 17px;
+  left: 12px;
+  top: 0px;
+}
+
+/* ════════════════════════════════════════════════════════════
+       LEAF COLOR VARIATIONS
+    ════════════════════════════════════════════════════════════ */
+
+#leaves i:nth-of-type(4n) {
+  background: linear-gradient(to bottom right, #309900, #005600);
+}
+#leaves i:nth-of-type(4n + 1) {
+  background: linear-gradient(to bottom right, #5e9900, #2b5600);
+}
+#leaves i:nth-of-type(4n + 2) {
+  background: linear-gradient(to bottom right, #990, #564500);
+}
+#leaves i:nth-of-type(4n + 3) {
+  background: linear-gradient(to bottom right, #cc6600, #663300);
+}
+
+/* ════════════════════════════════════════════════════════════
+       LEAF OPACITY VARIATIONS
+    ════════════════════════════════════════════════════════════ */
+
+#leaves i:nth-of-type(3n) {
+  opacity: 0.7;
+}
+#leaves i:nth-of-type(3n + 1) {
+  opacity: 0.5;
+}
+#leaves i:nth-of-type(3n + 2) {
+  opacity: 0.3;
+}
+
+/* ════════════════════════════════════════════════════════════
+       LEAF ROTATION
+    ════════════════════════════════════════════════════════════ */
+
+#leaves i {
+  transform: rotate(180deg);
+}
+
+/* ════════════════════════════════════════════════════════════
+       ANIMATION VARIATIONS (3 different falling patterns)
+    ════════════════════════════════════════════════════════════ */
+
+#leaves i:nth-of-type(3n) {
+  animation-name: falling;
+}
+#leaves i:nth-of-type(3n + 1) {
+  animation-name: falling2;
+}
+#leaves i:nth-of-type(3n + 2) {
+  animation-name: falling3;
+}
+
+/* ════════════════════════════════════════════════════════════
+       KEYFRAME ANIMATIONS
+    ════════════════════════════════════════════════════════════ */
+
+@keyframes falling {
+  0% {
+    transform: translate3d(300px, 0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-350px, 700px, 0) rotate(90deg);
+    opacity: 0;
+  }
+}
+
+@keyframes falling2 {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(90deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-400px, 680px, 0) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+@keyframes falling3 {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-20deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-230px, 640px, 0) rotate(-70deg);
+    opacity: 0;
+  }
+}
+
+/* Support for older browsers */
+@-webkit-keyframes falling {
+  0% {
+    -webkit-transform: translate3d(300px, 0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translate3d(-350px, 700px, 0) rotate(90deg);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes falling2 {
+  0% {
+    -webkit-transform: translate3d(0, 0, 0) rotate(90deg);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translate3d(-400px, 680px, 0) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes falling3 {
+  0% {
+    -webkit-transform: translate3d(0, 0, 0) rotate(-20deg);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translate3d(-230px, 640px, 0) rotate(-70deg);
+    opacity: 0;
+  }
+}
+
+@keyframes cloudMove {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120vw);
+  }
+}
+
+.cloud-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.line {
+  position: absolute;
+  top: -16%;
+  left: 42%;
+  width: 1px;
+  height: 137%;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.line::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 15vh;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 75%, #ffffff 100%);
+  animation: drop var(--animation-duration, 4s) var(--animation-delay, 0s) infinite;
+  animation-fill-mode: forwards;
+  animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
+}
+
+@keyframes drop {
+  0% {
+    top: -50%;
+  }
+  100% {
+    top: 110%;
+  }
+}
+
+.ocean {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#octocat {
+  height: 300px;
+  width: 200px;
+  background: url(https://raw.githubusercontent.com/codypearce/codepen-files/main/pens/octocat/octocat.png) left center;
+  animation:
+    animateSprite 15s steps(1) infinite,
+    swim 15s ease-in-out infinite;
+  position: absolute;
+  right: -200px;
+  top: 50%;
+  margin-top: -150px;
+  z-index: 100;
+  will-change: transform, background-position;
+}
+
+.bubble {
+  border-radius: 100%;
+  position: absolute;
+  background-color: white;
+  bottom: var(--bottom, -30px);
+  left: var(--left);
+  width: var(--size, 30px);
+  height: var(--size, 30px);
+  opacity: var(--opacity, 0.2);
+  animation:
+    bubble var(--duration, 15s) ease-in-out infinite,
+    sideWays 4s ease-in-out infinite alternate;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes bubble {
+  0% {
+    transform: translateY(0%);
+    opacity: 0.06;
+  }
+  100% {
+    transform: translateY(-120vh);
+  }
+}
+
+@keyframes sideWays {
+  0% {
+    margin-left: 0px;
+  }
+  100% {
+    margin-left: 200px;
+  }
+}
+
+@keyframes animateSprite {
+  0% {
+    background-position: -600px;
+  }
+  20% {
+    background-position: 0px;
+  }
+  25% {
+    background-position: -200px;
+  }
+  35% {
+    background-position: -400px;
+  }
+  40% {
+    background-position: -400px;
+  }
+  50% {
+    background-position: -200px;
+  }
+  60% {
+    background-position: -0px;
+  }
+  67% {
+    background-position: -600px;
+  }
+  100% {
+    background-position: -600px;
+  }
+}
+
+@keyframes swim {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(calc(-50vw - 100px), 0);
+  }
+  25% {
+    transform: translate(calc(-50vw - 100px), 0);
+  }
+  35% {
+    transform: translate(calc(-50vw - 100px), -20vh);
+  }
+  50% {
+    transform: translate(-25vw, 15vh);
+  }
+  60% {
+    transform: translate(-25vw, -20vh);
+  }
+  67% {
+    transform: translate(-25vw, -20vh);
+  }
+  100% {
+    transform: translate(calc(-100vw - 300px), 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #octocat {
+    animation: animateSprite 15s steps(1) infinite;
+  }
+  .bubble {
+    animation: none;
+    opacity: 0.12;
+  }
+}
