@@ -257,105 +257,72 @@ function createAshFlake() {
 /* ════════════════════════════════════════════════════════════
     CLOUDS EFFECT
 ════════════════════════════════════════════════════════════ */
-/* ════════════════════════════════════════════════════════════
-    CLOUDS EFFECT
-════════════════════════════════════════════════════════════ */
 function initClouds() {
   const container = document.createElement('div');
-  container.classList.add('cloud-container');
+
+  container.className = 'cloud-container';
+
   document.getElementById('effectContainer').appendChild(container);
 
-  // SVG filters
-  if (!document.getElementById('cloud-filter-back')) {
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', '0');
-    svg.setAttribute('height', '0');
-    svg.style.position = 'absolute';
-    svg.innerHTML = `
-      <filter id="cloud-filter-back">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" seed="2"/>
-        <feDisplacementMap in="SourceGraphic" scale="170"/>
-      </filter>
-      <filter id="cloud-filter-mid">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="2"/>
-        <feDisplacementMap in="SourceGraphic" scale="150"/>
-      </filter>
-      <filter id="cloud-filter-front">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="2"/>
-        <feDisplacementMap in="SourceGraphic" scale="50"/>
-      </filter>
-    `;
-    document.body.appendChild(svg);
-  }
+  createCloudFilters();
 
-  const CLOUD_COUNT = 12;
+  const CLOUD_COUNT = 25;
 
   for (let i = 0; i < CLOUD_COUNT; i++) {
-    spawnCloud(container, i);
+    createCloud(container);
   }
 }
 
-function spawnCloud(container, index) {
+function createCloud(container) {
   const cloud = document.createElement('div');
-  cloud.classList.add('cloud-item');
 
-  // Random size
-  const scale = random(0.4, 1.2);
-  const baseW = random(200, 500);
-  const baseH = random(80, 160);
+  cloud.className = 'cloud';
 
-  // Random vertical position
-  const topVh = random(-5, 60);
+  const width = random(250, 700);
+  const height = random(80, 300);
 
-  // Random duration & delay
-  const duration = random(30, 90);
-  const delay = index * -random(5, 15); // stagger
+  cloud.style.setProperty('--w', `${width}px`);
+  cloud.style.setProperty('--h', `${height}px`);
 
-  cloud.style.cssText = `
-    position: absolute;
-    top: ${topVh}vh;
-    left: 0;
-    width: ${baseW * scale}px;
-    height: ${baseH * scale}px;
-    animation: cloudMove ${duration}s linear ${delay}s infinite;
+  cloud.style.top = `${random(-10, 80)}vh`;
+
+  cloud.style.animationDuration = `${random(180, 480)}s`;
+
+  cloud.style.animationDelay = `${-random(0, 300)}s`;
+  cloud.style.zIndex = Math.floor(random(1, 10));
+  container.appendChild(cloud);
+}
+
+function createCloudFilters() {
+  if (document.getElementById('cloud-svg-filter')) {
+    return;
+  }
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+  svg.id = 'cloud-svg-filter';
+
+  svg.style.position = 'absolute';
+  svg.style.width = '0';
+  svg.style.height = '0';
+
+  svg.innerHTML = `
+    <filter id="cloud-filter">
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.012"
+        numOctaves="4"
+        seed="0"
+      />
+
+      <feDisplacementMap
+        in="SourceGraphic"
+        scale="170"
+      />
+    </filter>
   `;
 
-  // 3 layers: back, mid, front
-  const layers = [
-    {
-      filter: 'cloud-filter-back',
-      shadow: `${baseW * 0.5}px ${baseH * 1.5}px 30px -10px rgba(255,255,255,0.9)`,
-      scale: 1.3,
-    },
-    {
-      filter: 'cloud-filter-mid',
-      shadow: `${baseW * 0.5}px ${baseH * 1.8}px 40px -20px rgba(200,220,255,0.6)`,
-      scale: 1.0,
-    },
-    {
-      filter: 'cloud-filter-front',
-      shadow: `${baseW * 0.5}px ${baseH * 2.0}px 20px -30px rgba(0,0,0,0.15)`,
-      scale: 0.85,
-    },
-  ];
-
-  layers.forEach(({ filter, shadow, scale: ls }) => {
-    const part = document.createElement('div');
-    part.style.cssText = `
-      position: absolute;
-      width: ${baseW * scale * ls}px;
-      height: ${baseH * scale * ls}px;
-      border-radius: 50%;
-      background: white;
-      top: 0; left: 0;
-      box-shadow: ${shadow};
-      filter: url(#${filter});
-      opacity: 0.85;
-    `;
-    cloud.appendChild(part);
-  });
-
-  container.appendChild(cloud);
+  document.body.appendChild(svg);
 }
 
 /* ════════════════════════════════════════════════════════════
