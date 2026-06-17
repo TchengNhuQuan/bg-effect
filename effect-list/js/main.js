@@ -144,6 +144,8 @@ efSelect.addEventListener('change', () => {
     initOcean();
   } else if (ef === 'ef-8') {
     initSpaceShip();
+  } else if (ef === "ef-9") {
+    initGodRaysEffect();
   }
 });
 

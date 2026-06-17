@@ -88,7 +88,9 @@ body {
 .bg-6 {
   background-image: url('../../images/pexels-simon73-3462588.jpg');
 }
-
+.bg-7 {
+  background-image: url("../../images/pexels-anastasia-sidorova-1306415039-24736928.jpg");
+}
 h1 {
   font-size: 40px;
   line-height: 1.5;
