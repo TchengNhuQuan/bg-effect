@@ -92,35 +92,6 @@
 
             <hr class="settings-divider" />
 
-            <!-- 1. Theme Color -->
-            <div class="section-label">Theme Color</div>
-            <div class="section-desc">Personalize your dashboard using your brand palette.</div>
-            <div class="color-swatches">
-              <div class="swatch swatch-black" data-color="#111111" title="Black"></div>
-              <div class="swatch swatch-navy" data-color="#2244cc" title="Navy"></div>
-              <div class="swatch swatch-blue" data-color="#3b82f6" title="Blue"></div>
-              <div class="swatch swatch-sky" data-color="#38bdf8" title="Sky"></div>
-              <div class="swatch swatch-purple" data-color="#7c3aed" title="Purple"></div>
-              <div class="swatch swatch-pink" data-color="#db2777" title="Pink"></div>
-              <div class="swatch swatch-rose" data-color="#e11d48" title="Rose"></div>
-              <div class="swatch swatch-orange" data-color="#ea580c" title="Orange"></div>
-              <div class="swatch swatch-yellow" data-color="#eab308" title="Yellow"></div>
-              <div class="swatch swatch-green active" data-color="#79b533" title="Green"></div>
-              <div class="custom-color-wrap">
-                <span class="custom-label">Custom</span>
-                <input
-                  type="text"
-                  class="custom-hex"
-                  id="customHex"
-                  value="#79b533"
-                  maxlength="7"
-                  placeholder="#000000"
-                />
-              </div>
-            </div>
-
-            <hr class="settings-divider" />
-
             <!-- 4. Background Image -->
             <div class="setting-row">
               <div class="setting-row-info">
@@ -135,6 +106,7 @@
                 <option value="bg-5">⛰  Background 5</option>
                 <option value="bg-6">🌃 Background 6</option>
                 <option value="bg-7">🌿 Background 7</option>
+                <option value="bg-8">🌿 Background 8</option>
               </select>
             </div>
 
@@ -148,15 +120,19 @@
               </div>
               <select class="setting-select" id="efSelect">
                 <option>Select an effect</option>
-                <option value="ef-1">Smoke Effect</option>
+                <option value="ef-1">Smoke Effect</option> 
                 <option value="ef-2">Snowing Effect</option>
                 <option value="ef-3">Cloud Moving Effect</option>
                 <option value="ef-4">Falling Leaves Effect</option>
                 <option value="ef-5">Shooting Star Effect</option>
-                <option value="ef-6">Octocat Deep Effect</option>
+                <option value="ef-6">Thunder Effect</option>
                 <option value="ef-7">Falling Ash Effect</option>
-                <option value="ef-8">Space Ship Flying Effect</option>
+                <option value="ef-8">Fog Effect</option>
                 <option value="ef-9">God Rays Effect</option>
+                <option value="ef-10">Rains Effect</option>
+                <option value="ef-11">Smoke Effect 2</option>
+                <option value="ef-12">Fire Ember Effect </option>
+                <option value="ef-13">Bird Flying Effect </option>
               </select>
             </div>
           </div>
@@ -173,6 +149,7 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     ></script>
 
+    <script src="https://unpkg.com/three@0.112.0/build/three.js"></script>
     <script src="./js/space.js"></script>
     <script src="./js/effects.js"></script>
     <script src="./js/main.js"></script>

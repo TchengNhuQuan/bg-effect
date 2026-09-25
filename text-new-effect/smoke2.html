@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Fire Particles</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #050505;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: radial-gradient(ellipse at 50% 100%, rgba(255, 70, 0, 0.12), transparent 55%), #050505;
+      }
+
+      #fireCanvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        mix-blend-mode: screen;
+      }
+
+      .ground-glow {
+        position: absolute;
+        left: 50%;
+        bottom: -15%;
+        width: 100%;
+        height: 35%;
+        transform: translateX(-50%);
+        background: radial-gradient(ellipse, rgba(255, 90, 10, 0.16), rgba(255, 40, 0, 0.04) 45%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="scene">
+      <canvas id="fireCanvas"></canvas>
+      <div class="ground-glow"></div>
+    </div>
+
+    <script>
+      class FireParticle {
+        constructor(system) {
+          this.system = system;
+          this.reset(true);
+        }
+
+        reset(initial = false) {
+          const s = this.system;
+          this.x = s.width * 0.5 + (Math.random() - 0.5) * s.spawnWidth;
+          this.y = s.height + Math.random() * (initial ? s.height * 0.25 : 30);
+
+          // Size
+          const random = Math.random();
+          // this.size = random < 0.92 ? 0.35 + Math.random() * 0.9 : 0.8 + Math.random() * 1.2;
+          this.size = random < 0.8 ? 0.7 + Math.random() * 1.8 : 2 + Math.random() * 3;
+
+          this.vy = -(s.minSpeed + Math.random() * (s.maxSpeed - s.minSpeed));
+
+          this.vx = (Math.random() - 0.5) * 0.15;
+
+          // Life
+          this.maxLife = s.minLife + Math.random() * (s.maxLife - s.minLife);
+          this.life = this.maxLife;
+
+          this.seed = Math.random() * 10000;
+          this.age = 0;
+          this.brightness = 0.5 + Math.random() * 0.5;
+          this.stretch = 0.8 + Math.random() * 1.5;
+        }
+
+        update(delta, time) {
+          const s = this.system;
+          this.age += delta;
+          this.life -= delta;
+
+          /* BAY LÊN */
+          this.y += this.vy * delta;
+
+          /* DRIFT NHẸ */
+          const wave = Math.sin(time * 0.0015 + this.seed);
+          const wave2 = Math.sin(time * 0.0008 + this.seed * 1.7);
+          this.x += (wave * 0.18 + wave2 * 0.08 + s.wind * 0.15) * delta;
+          this.vy *= 0.9995;
+          if (this.life <= 0 || this.y < s.topLimit) {
+            this.reset();
+          }
+        }
+
+        draw(ctx) {
+          const life = Math.max(0, Math.min(1, this.life / this.maxLife));
+
+          // Fade in - out
+          const fadeIn = Math.min(1, this.age / 50);
+          const fadeOut = life < 0.35 ? life / 0.35 : 1;
+          let alpha = fadeIn * fadeOut * this.brightness;
+
+          // Flicker light
+          alpha *= 0.8 + Math.random() * 0.2;
+
+          // Particle
+          const size = this.size * (0.25 + life * 0.75);
+          const glow = Math.max(1.5, size * 5);
+          ctx.save();
+          ctx.translate(this.x, this.y);
+
+          /* SOFT GLOW */
+          const glowGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, glow);
+          glowGradient.addColorStop(0, `rgba(255,230,150,${alpha * 0.7})`);
+          glowGradient.addColorStop(0.2, `rgba(255,160,40,${alpha * 0.35})`);
+          glowGradient.addColorStop(0.5, `rgba(255,70,10,${alpha * 0.08})`);
+          glowGradient.addColorStop(1, 'rgba(255,30,0,0)');
+          ctx.fillStyle = glowGradient;
+          ctx.beginPath();
+          ctx.arc(0, 0, glow, 0, Math.PI * 2);
+          ctx.fill();
+
+          /* HOT CORE */
+          const core = ctx.createRadialGradient(0, 0, 0, 0, 0, size);
+          core.addColorStop(0, `rgba(255,255,220,${alpha})`);
+          core.addColorStop(0.35, `rgba(255,210,80,${alpha * 0.9})`);
+          core.addColorStop(0.75, `rgba(255,100,20,${alpha * 0.55})`);
+          core.addColorStop(1, 'rgba(255,30,0,0)');
+          ctx.fillStyle = core;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, size, size * this.stretch, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      class FireParticleSystem {
+        constructor(canvas, options = {}) {
+          this.canvas = canvas;
+
+          this.ctx = canvas.getContext('2d', {
+            alpha: true,
+          });
+
+          /* Settings */
+          this.density = options.density ?? 1;
+          this.wind = options.wind ?? 0.25;
+          this.minSpeed = options.minSpeed ?? 0.35;
+          this.maxSpeed = options.maxSpeed ?? 0.9;
+          this.minLife = options.minLife ?? 450;
+          this.maxLife = options.maxLife ?? 1400;
+
+          this.horizontalSpeed = options.horizontalSpeed ?? 0.8;
+          this.spawnWidth = options.spawnWidth ?? 500;
+          this.topLimit = options.topLimit ?? 100;
+          this.particles = [];
+          this.width = 0;
+          this.height = 0;
+          this.lastTime = 0;
+          this.running = false;
+          this.resize();
+          window.addEventListener('resize', () => this.resize());
+          this.createParticles();
+        }
+
+        resize() {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          this.dpr = dpr;
+          this.width = window.innerWidth;
+          this.height = window.innerHeight;
+          this.canvas.width = this.width * dpr;
+          this.canvas.height = this.height * dpr;
+          this.canvas.style.width = this.width + 'px';
+          this.canvas.style.height = this.height + 'px';
+          this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        createParticles() {
+          /* Scale particle count based  on screen size. */
+          const base = Math.min(this.width * 0.18, 100);
+          const count = Math.floor(base * this.density);
+          this.particles = Array.from({ length: count }, () => new FireParticle(this));
+        }
+
+        start() {
+          if (this.running) return;
+          this.running = true;
+          this.lastTime = performance.now();
+          requestAnimationFrame((time) => this.animate(time));
+        }
+
+        stop() {
+          this.running = false;
+        }
+
+        animate(time) {
+          if (!this.running) return;
+          const delta = Math.min(time - this.lastTime, 32);
+          this.lastTime = time;
+
+          /* Clear canvas. */
+          this.ctx.clearRect(0, 0, this.width, this.height);
+
+          /* Additive blending.*/
+          this.ctx.globalCompositeOperation = 'lighter';
+
+          /* Update and render.*/
+          for (const particle of this.particles) {
+            particle.update(delta, time);
+            particle.draw(this.ctx);
+          }
+
+          this.ctx.globalCompositeOperation = 'source-over';
+          requestAnimationFrame((t) => this.animate(t));
+        }
+      }
+
+      /* Initialize */
+      const canvas = document.getElementById('fireCanvas');
+      const fire = new FireParticleSystem(canvas, {
+        density: 2,
+        wind: 0.15,
+        minSpeed: 0.35,
+        maxSpeed: 0.8,
+        horizontalSpeed: 0.6,
+        minLife: 450,
+        maxLife: 1400,
+        spawnWidth: window.innerWidth * 1,
+        topLimit: window.innerHeight * 0.45,
+      });
+
+      fire.start();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        font-family: sans-serif;
+      }
+      /* ==================================================
+        BOOK SCENE
+      ================================================== */
+
+      .book-scene {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        isolation: isolate;
+
+        /* Prevent accidental text selection while moving */
+        user-select: none;
+      }
+
+      /* ==================================================
+        BACKGROUND
+      ================================================== */
+
+      .book-scene__background {
+        position: absolute;
+        inset: -3%;
+        z-index: 1;
+        transform: translate3d(0, 0, 0) scale(1.03);
+        transform-origin: center center;
+        will-change: transform;
+        pointer-events: none;
+      }
+
+      .book-scene__background img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      /* ==================================================
+        CHARACTER
+      ================================================== */
+
+      .book-scene__character {
+        position: absolute;
+        right: 10%;
+        bottom: 4%;
+        z-index: 3;
+        width: clamp(220px, 23vw, 360px);
+        transform: translate3d(0, 0, 0) rotateY(0deg) rotateX(0deg);
+        transform-origin: center bottom;
+        will-change: transform;
+        pointer-events: none;
+      }
+
+      .book-scene__character img {
+        display: block;
+        width: 100%;
+        height: auto;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      /* ==================================================
+        CONTENT
+      ================================================== */
+
+      .book-scene__content {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .book-scene__info {
+        position: absolute;
+        top: 5%;
+        left: 3%;
+        width: min(44%, 700px);
+        padding: 40px;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.72);
+        color: #fff;
+      }
+
+      .book-scene__info h1 {
+        margin: 0 0 12px;
+        font-size: clamp(32px, 3vw, 56px);
+        line-height: 1.15;
+        font-weight: 800;
+      }
+
+      .book-scene__author {
+        margin-bottom: 24px;
+        font-size: 22px;
+        color: #76b82a;
+      }
+
+      .book-scene__info p {
+        margin: 0;
+
+        font-size: 16px;
+        line-height: 1.5;
+      }
+
+      /* ==================================================
+        TABLET
+      ================================================== */
+
+      @media (max-width: 1023px) {
+        .book-scene__character {
+          right: 6%;
+          bottom: 4%;
+          width: clamp(200px, 30vw, 300px);
+        }
+
+        .book-scene__info {
+          width: 48%;
+          padding: 30px;
+        }
+      }
+
+      /* ==================================================
+        MOBILE
+      ================================================== */
+
+      @media (max-width: 767px) {
+        .book-scene {
+          height: auto;
+          min-height: 100vh;
+          overflow: hidden;
+        }
+
+        /*
+          * Disable visual mouse-parallax movement on mobile.
+        */
+        .book-scene__background,
+        .book-scene__character {
+          will-change: auto;
+        }
+
+        .book-scene__info {
+          position: relative;
+          top: auto;
+          left: auto;
+          width: calc(100% - 32px);
+          margin: 20px 16px;
+          padding: 24px;
+        }
+
+        .book-scene__character {
+          position: relative;
+          right: auto;
+          bottom: auto;
+          width: min(70vw, 280px);
+          margin: 40px auto 0;
+        }
+      }
+
+      /* ==================================================
+        REDUCED MOTION
+      ================================================== */
+
+      @media (prefers-reduced-motion: reduce) {
+        .book-scene__background,
+        .book-scene__character {
+          transform: none !important;
+          will-change: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="book-scene js-mouse-parallax">
+      <!-- =========================================
+         Background
+    ========================================== -->
+      <div class="book-scene__background js-parallax-background">
+        <img src="/images/apocalyptic-war-zone-landscape-with-destruction.jpg" alt="" draggable="false" />
+      </div>
+
+      <!-- =========================================
+         Character
+    ========================================== -->
+      <div class="book-scene__character js-parallax-character">
+        <img src="/images/ChatGPT_Image_Feb_4__2026__01_37_08_PM-removebg-preview.png" alt="" draggable="false" />
+      </div>
+
+      <!-- =========================================
+         Left Content
+    ========================================== -->
+      <div class="book-scene__content">
+        <div class="book-scene__info">
+          <h1>
+            THE WHISPERING
+            <br />
+            FOREST BEYOND THE...
+          </h1>
+
+          <div class="book-scene__author">by Emily Carter</div>
+
+          <p>
+            The Whispering Forest is one of the most mysterious place in the kingdom. Many travelers says the trees can
+            talks when the moon are full.
+          </p>
+        </div>
+      </div>
+    </section>
+  </body>
+  <script>
+    /* ==================================================
+   MOUSE PARALLAX
+   ================================================== */
+
+    const createMouseParallax = (container) => {
+      const background = container.querySelector('.js-parallax-background');
+
+      const character = container.querySelector('.js-parallax-character');
+
+      if (!background || !character) {
+        return () => {};
+      }
+
+      /* ==================================================
+       SETTINGS
+    ================================================== */
+
+      const SETTINGS = {
+        /*
+         * Parallax only works when pointer is inside
+         * the right side of the scene.
+         */
+        interactionStart: 0.5,
+
+        /*
+         * Background should move very subtly.
+         */
+        background: {
+          x: -4,
+          y: -3,
+        },
+
+        /*
+         * Character is closer to the camera,
+         * therefore moves more.
+         */
+        character: {
+          x: 14,
+          y: 8,
+
+          rotateX: -1.5,
+          rotateY: 2,
+        },
+
+        /*
+         * Higher = faster response.
+         * Lower = smoother / heavier.
+         */
+        easing: 0.08,
+
+        /*
+         * How far the mouse can influence
+         * the scene.
+         */
+        maxInput: 1,
+
+        /*
+         * Extra scale prevents background edges
+         * from becoming visible.
+         */
+        backgroundScale: 1.03,
+
+        /*
+         * Desktop only.
+         */
+        minWidth: 768,
+      };
+
+      /* ==================================================
+       STATE
+    ================================================== */
+
+      const state = {
+        targetX: 0,
+        targetY: 0,
+
+        currentX: 0,
+        currentY: 0,
+
+        rafId: null,
+
+        destroyed: false,
+      };
+
+      /* ==================================================
+       HELPERS
+    ================================================== */
+
+      const clamp = (value, min, max) => {
+        return Math.max(min, Math.min(max, value));
+      };
+
+      const isEnabled = () => {
+        /*
+         * Disable on mobile / touch devices.
+         */
+        if (window.innerWidth < SETTINGS.minWidth) {
+          return false;
+        }
+
+        /*
+         * Respect user's reduced-motion preference.
+         */
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          return false;
+        }
+
+        return true;
+      };
+
+      /* ==================================================
+       RESET
+    ================================================== */
+
+      const reset = () => {
+        state.targetX = 0;
+        state.targetY = 0;
+      };
+
+      /* ==================================================
+       POINTER MOVE
+    ================================================== */
+
+      const handlePointerMove = (event) => {
+        if (!isEnabled()) {
+          return;
+        }
+
+        const rect = container.getBoundingClientRect();
+
+        if (
+          event.clientX < rect.left ||
+          event.clientX > rect.right ||
+          event.clientY < rect.top ||
+          event.clientY > rect.bottom
+        ) {
+          return;
+        }
+
+        /*
+         * Convert pointer position into:
+         *
+         * -1 = left
+         *  0 = center
+         * +1 = right
+         */
+        const normalizedX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+
+        const normalizedY = ((event.clientY - rect.top) / rect.height) * 2 - 1;
+
+        /*
+         * Only activate parallax on the right side.
+         *
+         * Example:
+         *
+         * |----------|----------|
+         *            ↑
+         *         starts here
+         */
+        const interactionStart = rect.left + rect.width * SETTINGS.interactionStart;
+
+        if (event.clientX < interactionStart) {
+          reset();
+          return;
+        }
+
+        /*
+         * Normalize X relative to the RIGHT HALF.
+         *
+         * This is important.
+         *
+         * We don't want:
+         *
+         * left side = -1
+         * right side = +1
+         *
+         * because the left content should not affect
+         * the parallax.
+         */
+        const rightProgress = (event.clientX - interactionStart) / (rect.width * (1 - SETTINGS.interactionStart));
+
+        const rightX = clamp(rightProgress, 0, 1) * 2 - 1;
+
+        state.targetX = clamp(rightX, -SETTINGS.maxInput, SETTINGS.maxInput);
+
+        state.targetY = clamp(normalizedY, -SETTINGS.maxInput, SETTINGS.maxInput);
+      };
+
+      /* ==================================================
+       UPDATE
+    ================================================== */
+
+      const update = () => {
+        if (state.destroyed) {
+          return;
+        }
+
+        /*
+         * Smooth interpolation.
+         *
+         * This prevents the scene from following
+         * the mouse too mechanically.
+         */
+        state.currentX += (state.targetX - state.currentX) * SETTINGS.easing;
+
+        state.currentY += (state.targetY - state.currentY) * SETTINGS.easing;
+
+        /* ==================================================
+           BACKGROUND
+        ================================================== */
+
+        const backgroundX = state.currentX * SETTINGS.background.x;
+
+        const backgroundY = state.currentY * SETTINGS.background.y;
+
+        background.style.transform = `
+            translate3d(
+                ${backgroundX}px,
+                ${backgroundY}px,
+                0
+            )
+            scale(${SETTINGS.backgroundScale})
+        `;
+
+        /* ==================================================
+           CHARACTER
+        ================================================== */
+
+        const characterX = state.currentX * SETTINGS.character.x;
+
+        const characterY = state.currentY * SETTINGS.character.y;
+
+        const rotateX = state.currentY * SETTINGS.character.rotateX;
+
+        const rotateY = state.currentX * SETTINGS.character.rotateY;
+
+        character.style.transform = `
+            translate3d(
+                ${characterX}px,
+                ${characterY}px,
+                0
+            )
+            rotateX(${rotateX}deg)
+            rotateY(${rotateY}deg)
+        `;
+
+        /*
+         * Continue animation.
+         */
+        state.rafId = requestAnimationFrame(update);
+      };
+
+      /* ==================================================
+       POINTER LEAVE
+    ================================================== */
+
+      const handlePointerLeave = () => {
+        reset();
+      };
+
+      /* ==================================================
+       RESIZE
+    ================================================== */
+
+      const handleResize = () => {
+        /*
+         * If switched to mobile,
+         * immediately reset the scene.
+         */
+        if (!isEnabled()) {
+          reset();
+        }
+      };
+
+      /* ==================================================
+       EVENTS
+    ================================================== */
+
+      container.addEventListener('pointermove', handlePointerMove, {
+        passive: true,
+      });
+
+      container.addEventListener('pointerleave', handlePointerLeave);
+
+      window.addEventListener('resize', handleResize, {
+        passive: true,
+      });
+
+      /* ==================================================
+       START
+    ================================================== */
+
+      update();
+
+      /* ==================================================
+       CLEANUP
+    ================================================== */
+
+      return () => {
+        state.destroyed = true;
+
+        if (state.rafId) {
+          cancelAnimationFrame(state.rafId);
+        }
+
+        container.removeEventListener('pointermove', handlePointerMove);
+
+        container.removeEventListener('pointerleave', handlePointerLeave);
+
+        window.removeEventListener('resize', handleResize);
+
+        background.style.transform = '';
+
+        character.style.transform = '';
+      };
+    };
+    createMouseParallax(document.querySelector('.js-mouse-parallax'));
+  </script>
+</html>

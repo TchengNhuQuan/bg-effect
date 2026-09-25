@@ -33,6 +33,7 @@ canvas {
     transform: translateY(100vh);
   }
 }
+
 .snow-container {
   position: absolute;
   top: 0;
@@ -88,32 +89,38 @@ canvas {
     rgba(40, 30, 20, 0.3) 60%,
     transparent 80%
   );
-  --smoke-bottom: 150px;
   --z-smoke: 15;
   --smoke-blur: 15px;
+  --smoke-bottom: 150px;
+   --viewport-height: 100vh;
 }
 
 .smoke-container {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: var(--viewport-width);
-  height: var(--viewport-height);
+  inset: 0;
+  overflow: hidden;
   pointer-events: none;
+  z-index: 0;
 }
+
 .smoke-container {
-  z-index: var(--z-smoke);
+  z-index: 0;
   bottom: 0;
 }
 
 .smoke-large {
   position: absolute;
-  bottom: var(--smoke-bottom);
+  bottom: 150px;
   border-radius: 50%;
   opacity: 0;
-  filter: blur(var(--smoke-blur));
-  background: var(--smoke-gradient);
+  filter: blur(15px);
+  background: radial-gradient(
+    circle,
+    rgba(80, 60, 40, 0.7) 0%,
+    rgba(60, 45, 30, 0.5) 30%,
+    rgba(40, 30, 20, 0.3) 60%,
+    transparent 80%
+  );
   animation: smoke-billow ease-out infinite;
 }
 
@@ -150,8 +157,8 @@ canvas {
 }
 
 /* ════════════════════════════════════════════════════════════
-       LEAF BASE STYLES
-    ════════════════════════════════════════════════════════════ */
+  LEAF BASE STYLES
+════════════════════════════════════════════════════════════ */
 
 #leaves i {
   display: inline-block;
@@ -259,8 +266,8 @@ canvas {
 }
 
 /* ════════════════════════════════════════════════════════════
-       LEAF COLOR VARIATIONS
-    ════════════════════════════════════════════════════════════ */
+  LEAF COLOR VARIATIONS
+════════════════════════════════════════════════════════════ */
 
 #leaves i:nth-of-type(4n) {
   background: linear-gradient(to bottom right, #309900, #005600);
@@ -276,8 +283,8 @@ canvas {
 }
 
 /* ════════════════════════════════════════════════════════════
-       LEAF OPACITY VARIATIONS
-    ════════════════════════════════════════════════════════════ */
+  LEAF OPACITY VARIATIONS
+════════════════════════════════════════════════════════════ */
 
 #leaves i:nth-of-type(3n) {
   opacity: 0.7;
@@ -290,16 +297,16 @@ canvas {
 }
 
 /* ════════════════════════════════════════════════════════════
-       LEAF ROTATION
-    ════════════════════════════════════════════════════════════ */
+  LEAF ROTATION
+════════════════════════════════════════════════════════════ */
 
 #leaves i {
   transform: rotate(180deg);
 }
 
 /* ════════════════════════════════════════════════════════════
-       ANIMATION VARIATIONS (3 different falling patterns)
-    ════════════════════════════════════════════════════════════ */
+  ANIMATION VARIATIONS (3 different falling patterns)
+════════════════════════════════════════════════════════════ */
 
 #leaves i:nth-of-type(3n) {
   animation-name: falling;
@@ -312,8 +319,8 @@ canvas {
 }
 
 /* ════════════════════════════════════════════════════════════
-       KEYFRAME ANIMATIONS
-    ════════════════════════════════════════════════════════════ */
+  KEYFRAME ANIMATIONS
+════════════════════════════════════════════════════════════ */
 
 @keyframes falling {
   0% {
@@ -395,19 +402,13 @@ canvas {
 }
 .cloud {
   position: absolute;
-
   left: -60vw;
-
   width: var(--w);
   height: var(--h);
-
   border-radius: 50%;
   background: transparent;
-
   filter: url(#cloud-filter);
-
   opacity: 0.95;
-
   animation-name: cloudMove;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
@@ -592,5 +593,145 @@ canvas {
   .bubble {
     animation: none;
     opacity: 0.12;
+  }
+}
+
+.lightning {
+  height: 100%;
+}
+
+.lightning::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url(/images/lightining.png);
+  top: -100px;
+  transform: rotate(180deg);
+  animation: lightning 4s linear infinite;
+  opacity: 1;
+}
+
+@keyframes lightning {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0;
+  }
+  21% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0;
+  }
+  31% {
+    opacity: 1;
+  }
+  35% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+
+#fogCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#p-canvas-webgl {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
+
+.scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255, 70, 0, 0.12), transparent 55%), #05050500;
+}
+
+#fireCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.ground-glow {
+  position: absolute;
+  left: 50%;
+  bottom: -15%;
+  width: 100%;
+  height: 35%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, rgba(255, 90, 10, 0.16), rgba(255, 40, 0, 0.04) 45%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+/* ════════════════════════════════════════════════════════════
+    FIREFLY EFFECT STYLING
+════════════════════════════════════════════════════════════ */
+
+.fireflies-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.fireflies-container span {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff6a5;
+  box-shadow:
+    0 0 8px #fff6a5,
+    0 0 20px #ffd35a,
+    0 0 50px #ff9d00;
+  opacity: 0.3;
+  animation:
+    fireflyMove linear infinite,
+    fireflyGlow ease-in-out infinite;
+}
+
+@keyframes fireflyMove {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(var(--move-x), var(--move-y));
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes fireflyGlow {
+  0%,
+  100% {
+    opacity: 0.2;
+    scale: 1;
+  }
+
+  50% {
+    opacity: 1;
+    scale: 1.4;
   }
 }

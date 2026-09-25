@@ -71,13 +71,13 @@ function createSmoke(container, index, cfg) {
 
 //  Initialize all effects
 function init() {
-  const particlesContainer = document.getElementById('particles');
+  // const particlesContainer = document.getElementById('particles');
   const smokeContainer = document.getElementById('smoke');
 
   //  Create falling ash
-  for (let i = 0; i < config.ashes.count; i++) {
-    createAsh(particlesContainer, i, config.ashes);
-  }
+  // for (let i = 0; i < config.ashes.count; i++) {
+  //   createAsh(particlesContainer, i, config.ashes);
+  // }
 
   // Create smoke
   for (let i = 0; i < config.smokes.count; i++) {
@@ -85,9 +85,9 @@ function init() {
   }
 
   // Create more falling fire
-  for (let i = 0; i < config.fallingFires.count; i++) {
-    createFire(firesContainer, i, config.fallingFires);
-  }
+  // for (let i = 0; i < config.fallingFires.count; i++) {
+  //   createFire(firesContainer, i, config.fallingFires);
+  // }
 }
 
 // Run when page load finish
